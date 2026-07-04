@@ -25,6 +25,48 @@ intelligent-nobel/
 
 ---
 
+## 🔄 System Flow Diagram
+
+Below is the execution flow of the crop recommendation engine from user input to ML output:
+
+```mermaid
+flowchart TD
+    A[User Inputs Parameters N, P, K, Temp, Hum, pH, Rain] --> B[Frontend HTML5 Validation]
+    B -->|Bypassed or Validated| C[Flask Backend /predict POST]
+    C --> D[Backend Float Check & Agricultural Range Validation]
+    D -->|Invalid| E[Render error_text on UI]
+    D -->|Valid| F[Load StandardScaler & Scale Inputs]
+    F --> G[Load Logistic Regression & Predict Class Index]
+    G --> H[Load LabelEncoder & Decode to Crop Name String]
+    H --> I[Log Query & Output to SQLite prediction_history]
+    I --> J[Fetch Local HD Crop Photo & Description]
+    J --> K[Render Symmetrical Split Result with Neon Scan Transition]
+```
+
+---
+
+## 🗄️ Database Entity Relationship (ER) Diagram
+
+The system records recommendations in a local SQLite database for history tracking:
+
+```mermaid
+erDiagram
+    PREDICTION_HISTORY {
+        int id PK "AUTOINCREMENT"
+        real nitrogen "Nitrogen level"
+        real phosphorous "Phosphorus level"
+        real potassium "Potassium level"
+        real temperature "Soil temperature in °C"
+        real humidity "Humidity percentage"
+        real ph "Soil pH (3.5 - 10.0)"
+        real rainfall "Rainfall in mm"
+        text prediction "Recommended Crop Name"
+        datetime timestamp "CURRENT_TIMESTAMP"
+    }
+```
+
+---
+
 ## 🛠️ Pre-requisites & Local Installation
 
 Ensure you have Python 3.10 or higher installed. Run the following command at the project root to install the required dependencies:
@@ -49,33 +91,3 @@ python app.py
 ```
 
 Open your browser and navigate to **`http://127.0.0.1:5000`** to interact with the application.
-
----
-
-## 🚀 Cloud Deployment on Vercel
-
-The application is configured to run out-of-the-box on **Vercel** as a Python Serverless Function. Follow these steps to deploy:
-
-### Step 1: Install Vercel CLI (If not installed)
-```bash
-npm install -g vercel
-```
-
-### Step 2: Login and Deploy
-Navigate to your project root folder and login to your Vercel account:
-```bash
-vercel login
-```
-Run the deployment command:
-```bash
-vercel
-```
-1. Set up and deploy `intelligent-nobel`? **Yes**
-2. Which scope? **Select your personal scope**
-3. Link to existing project? **No**
-4. What is your project's name? **opticrop**
-5. In which directory is your code located? `./` (press enter)
-6. Want to override settings? **No**
-
-### Step 3: Verify the Live Link
-Once the preview deploy completes, Vercel will output a live URL (e.g. `https://opticrop.vercel.app`). Open it in your browser to run predictions in the cloud!

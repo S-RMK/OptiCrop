@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Your Crop - OptiCrop</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header>
+    <nav class="topnav">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('about') }}">About</a>
+      <a href="{{ url_for('findyourcrop') }}" class="active">FindYourCrop</a>
+    </nav>
+  </header>
+
+  <div class="main-wrapper">
+    <div class="predict-container">
+      <!-- Yellow Header Banner -->
+      <div class="predict-banner">
+        <h1>Find Your Best Crop Here</h1>
+      </div>
+
+      <!-- Split-Pane Main Layout (Symmetrical when result exists, Centered when empty) -->
+      <div class="predict-main-layout {% if not crop_name and not error_text %}centered-single{% endif %}">
+        
+        <!-- Left Column: Input Form (Inputs brought upwards and fitted) -->
+        <div class="predict-form-section">
+          <!-- Instruction text -->
+          <div class="predict-subheader" style="margin-top: 0; margin-bottom: 1.5rem; text-align: left;">
+            Please enter the conditions:
+          </div>
+
+          <div class="predict-card">
+            <form action="{{ url_for('predict') }}" method="post" class="predict-form" onsubmit="return handleFormSubmit(this)">
+              <div class="predict-form-grid">
+                <div class="form-group">
+                  <label for="nitrogen">Nitrogen (N)</label>
+                  <input type="number" step="any" id="nitrogen" name="nitrogen" placeholder="e.g. 0 - 150" min="0" max="150" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="phosphorous">Phosphorous (P)</label>
+                  <input type="number" step="any" id="phosphorous" name="phosphorous" placeholder="e.g. 5 - 150" min="5" max="150" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="potassium">Potassium (K)</label>
+                  <input type="number" step="any" id="potassium" name="potassium" placeholder="e.g. 5 - 210" min="5" max="210" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="temperature">Temperature (°C)</label>
+                  <input type="number" step="any" id="temperature" name="temperature" placeholder="e.g. 0 - 50" min="0" max="50" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="humidity">Humidity (%)</label>
+                  <input type="number" step="any" id="humidity" name="humidity" placeholder="e.g. 0 - 100" min="0" max="100" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="ph">pH Level</label>
+                  <input type="number" step="any" id="ph" name="ph" placeholder="e.g. 3.5 - 10" min="3.5" max="10" required>
+                </div>
+                
+                <div class="form-group full-width">
+                  <label for="rainfall">Rainfall (mm)</label>
+                  <input type="number" step="any" id="rainfall" name="rainfall" placeholder="e.g. 10 - 300" min="10" max="300" required>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-submit">Predict Crop Recommendation</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Right Column: Symmetrical Results Card (only shown after a prediction is made) -->
+        {% if crop_name or error_text %}
+        <div class="predict-right-pane">
+          <!-- Instruction text mock spacer to match the left subheader vertical alignment -->
+          <div class="predict-subheader" style="margin-top: 0; margin-bottom: 1.5rem; opacity: 0; pointer-events: none;">
+            Spacer
+          </div>
+          
+          <!-- Error Text (if any) -->
+          {% if error_text %}
+          <div class="prediction-result-card" style="border-color: #ef4444; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2);">
+            <div class="prediction-result-info">
+              <h3 style="color: #ef4444;">Error</h3>
+              <p class="crop-desc" style="color: #fca5a5;">{{ error_text }}</p>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Highlighted Result Card with HD Crop Image beside text and Laser Scan effect -->
+          {% if crop_name %}
+          <div class="prediction-result-card">
+            <!-- Laser scanning neon line overlay -->
+            <div class="scan-laser-line"></div>
+            
+            <div class="prediction-result-info">
+              <h3>Recommendation Result</h3>
+              <p class="crop-name">{{ crop_name|capitalize }}</p>
+              <p class="crop-desc">{{ crop_desc }}</p>
+            </div>
+            <div class="prediction-result-image">
+              <img src="{{ crop_image }}" alt="{{ crop_name }}" loading="lazy">
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Recent Prediction History Table (Brought Outside Grid for Full-Width Layout Section) -->
+      {% if history %}
+      <div class="history-section">
+        <h2>Recent Recommendations</h2>
+        <div class="table-responsive">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>N</th>
+                <th>P</th>
+                <th>K</th>
+                <th>Temp</th>
+                <th>Hum</th>
+                <th>pH</th>
+                <th>Rain</th>
+                <th>Recommended Crop</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in history %}
+              <tr>
+                <td>{{ "%.0f"|format(row[0]) }}</td>
+                <td>{{ "%.0f"|format(row[1]) }}</td>
+                <td>{{ "%.0f"|format(row[2]) }}</td>
+                <td>{{ "%.1f"|format(row[3]) }}°C</td>
+                <td>{{ "%.0f"|format(row[4]) }}%</td>
+                <td>{{ "%.1f"|format(row[5]) }}</td>
+                <td>{{ "%.0f"|format(row[6]) }}mm</td>
+                <td class="highlight-crop">{{ row[7]|capitalize }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  <script>
+    function handleFormSubmit(form) {
+      const btn = form.querySelector('.btn-submit');
+      // Add loading spinner state to button
+      btn.classList.add('loading');
+      return true;
+    }
+  </script>
+</body>
+</html>

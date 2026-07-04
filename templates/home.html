@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OptiCrop - Smart Agricultural Optimization</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header>
+    <nav class="topnav">
+      <a href="{{ url_for('home') }}" class="active">Home</a>
+      <a href="{{ url_for('about') }}">About</a>
+      <a href="{{ url_for('findyourcrop') }}">FindYourCrop</a>
+    </nav>
+  </header>
+
+  <div class="main-wrapper">
+    <div class="home-container">
+      <!-- Title & Intro Card -->
+      <div class="home-intro">
+        <h1>Opti Crop Agricultural Optimisation</h1>
+        <p>The main purpose of the OptiCrop aims to develop an advanced software system that utilizes data-driven insights to optimize agricultural production for different crops.</p>
+      </div>
+
+      <!-- Centered Giant Watermark (Fixed positioning near bottom to prevent cards overlap) -->
+      <div class="giant-title-wrapper">
+        <div class="giant-title">opti-crop</div>
+      </div>
+
+      <!-- Right Side Floating Widgets -->
+      <div class="floating-widgets">
+        <!-- Sprout/Nutrient Widget -->
+        <div class="widget-item" onclick="openDrawer('nutrients')" title="Nutrient Levels (N, P, K)">
+          <svg viewBox="0 0 24 24">
+            <path d="M12,2A10,10,0,0,0,2,12a9.89,9.89,0,0,0,2.26,6.33l-2,2a1,1,0,0,0,1.42,1.42l2-2A9.9,9.9,0,0,0,12,22h0a10,10,0,0,0,10-10A10,10,0,0,0,12,2Zm0,18a8,8,0,0,1-5.66-2.34,1,1,0,0,0-1.42,0,8,8,0,0,1,0-11.32A8,8,0,0,1,12,4a8,8,0,0,1,8,8A8,8,0,0,1,12,20Z"/>
+            <path d="M12,6a6,6,0,0,0-6,6,1,1,0,0,0,2,0,4,4,0,0,1,4-4,1,1,0,0,0,0-2Z"/>
+          </svg>
+        </div>
+        <!-- Thermometer Widget -->
+        <div class="widget-item" onclick="openDrawer('temp')" title="Temperature">
+          <svg viewBox="0 0 24 24">
+            <path d="M15,13V5a3,3,0,0,0-6,0v8a5,5,0,1,0,6,0Zm-3,7a3,3,0,0,1-1.75-5.43,1,1,0,0,0,.4-.8V5a1,1,0,0,1,2,0v8.77a1,1,0,0,0,.4.8A3,3,0,0,1,12,20Z"/>
+          </svg>
+        </div>
+        <!-- Humidity Widget -->
+        <div class="widget-item" onclick="openDrawer('humidity')" title="Humidity">
+          <svg viewBox="0 0 24 24">
+            <path d="M12,2.69a1,1,0,0,0-1.41,0L5.34,7.94a8,8,0,1,0,13.32,0ZM12,20a6,6,0,0,1-6-6c0-2.07,1.86-4.6,6-8.31,4.14,3.71,6,6.24,6,8.31A6,6,0,0,1,12,20Z"/>
+          </svg>
+        </div>
+        <!-- Rainfall Widget -->
+        <div class="widget-item" onclick="openDrawer('rainfall')" title="Rainfall">
+          <svg viewBox="0 0 24 24">
+            <path d="M19.36,10.04a6,6,0,0,0-11.12-2.24,5,5,0,0,0-3.32,8.44,1,1,0,0,0,1.36-1.47,3,3,0,0,1,2-5.1,1,1,0,0,0,1-.78,4,4,0,0,1,7.45,1.18,1,1,0,0,0,.8.77,3,3,0,0,1,.81,5.83,1,1,0,0,0,0,2,5,5,0,0,0,.8-9.63Z"/>
+            <path d="M9,19a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,9,19Z"/>
+            <path d="M12,19a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19Z"/>
+            <path d="M15,19a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,15,19Z"/>
+          </svg>
+        </div>
+        <!-- pH Level Widget -->
+        <div class="widget-item" onclick="openDrawer('ph')" title="Soil pH">
+          <svg viewBox="0 0 24 24">
+            <path d="M19,2H5A3,3,0,0,0,2,5V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V5A3,3,0,0,0,19,2ZM5,20a1,1,0,0,1-1-1V5A1,1,0,0,1,5,4H19a1,1,0,0,1,1,1V19a1,1,0,0,1-1,1ZM17,9a1,1,0,0,0-1,1v4a1,1,0,0,0,2,0V10A1,1,0,0,0,17,9ZM13,9H11a1,1,0,0,0-1,1v4a1,1,0,0,0,2,0v-1h1a1,1,0,0,0,1-1V10A1,1,0,0,0,13,9Zm-1,3H11V11h1ZM8,9H7a1,1,0,0,0-1,1v4a1,1,0,0,0,2,0v-1H7v-1h1a1,1,0,0,0,1-1V10A1,1,0,0,0,8,9Z"/>
+          </svg>
+        </div>
+        <!-- Map/Location Widget -->
+        <div class="widget-item" onclick="openDrawer('mapping')" title="Precision Mapping">
+          <svg viewBox="0 0 24 24">
+            <path d="M12,2a8,8,0,0,0-8,8c0,5.25,7,12,7,12a1,1,0,0,0,1.48,0s7-6.75,7-12A8,8,0,0,0,12,2Zm0,11a3,3,0,1,1,3-3A3,3,0,0,1,12,13Z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Parameter Detail Drawer -->
+  <div id="infoDrawer" class="drawer">
+    <button class="drawer-close" onclick="closeDrawer()">&times;</button>
+    <div class="drawer-badge" id="drawerBadge">Parameter Info</div>
+    <h2 class="drawer-title" id="drawerTitle">Parameter Info</h2>
+    <div class="drawer-content" id="drawerContent">
+      <!-- Content populated dynamically via JS -->
+    </div>
+    <a href="{{ url_for('findyourcrop') }}" class="btn-drawer-action">Configure Parameters</a>
+  </div>
+
+  <script>
+    const parameterData = {
+      nutrients: {
+        title: "Soil Nutrients (N, P, K)",
+        badge: "Nutrient Levels",
+        content: `
+          <p>Soil nutrients are crucial chemical components representing the fertile profile of your soil:</p>
+          <p>• <strong>Nitrogen (N):</strong> Essential for green leaf growth, vegetative vigor, and protein synthesis. Rice and leafy crops demand higher nitrogen.</p>
+          <p>• <strong>Phosphorus (P):</strong> Stimulates root development and crop maturity. Highly demanded by grapes and apples.</p>
+          <p>• <strong>Potassium (K):</strong> Regulates water usage, builds plant immunity, and boosts overall crop disease resistance.</p>
+        `
+      },
+      temp: {
+        title: "Soil Temperature",
+        badge: "Thermal Conditions",
+        content: `
+          <p>Temperature dictates crop respiration rates, seedling germination speed, and soil organic matter decomposition.</p>
+          <p>• <strong>Warm crops</strong> (like mangoes, papayas, and coconuts) thrive best in temperatures above <strong>26°C - 30°C</strong>.</p>
+          <p>• <strong>Cool crops</strong> (like chickpeas and kidney beans) require milder climates between <strong>15°C - 22°C</strong>.</p>
+        `
+      },
+      humidity: {
+        title: "Relative Humidity",
+        badge: "Air Moisture",
+        content: `
+          <p>Relative humidity controls crop transpiration rate. Extremely high or low humidity alters crop watering needs.</p>
+          <p>• Tropical plantation crops like <strong>rice, banana, and coconut</strong> need high humidity (>80%).</p>
+          <p>• Legumes like <strong>chickpeas</strong> require arid climates with low humidity (<25%).</p>
+        `
+      },
+      rainfall: {
+        title: "Annual Rainfall",
+        badge: "Hydration Levels",
+        content: `
+          <p>Rainfall is the primary water input for agriculture, dictating soil moisture reserves.</p>
+          <p>• Heavy-water crops like <strong>rice and jute</strong> require high rainfall (>150mm).</p>
+          <p>• Dry crops like <strong>muskmelon and mungbeans</strong> excel in low rainfall (<30mm).</p>
+        `
+      },
+      ph: {
+        title: "Soil pH Level",
+        badge: "Acidity / Alkalinity",
+        content: `
+          <p>Soil pH indicates soil acidity/alkalinity, directly affecting how easily root systems can absorb nutrients.</p>
+          <p>• Most standard crops thrive in a slightly acidic to neutral range of <strong>6.0 - 7.0</strong>.</p>
+          <p>• Acidic or highly alkaline values restrict root absorption and require soil treatment.</p>
+        `
+      },
+      mapping: {
+        title: "Precision Agronomy",
+        badge: "Machine Learning GIS",
+        content: `
+          <p>OptiCrop integrates precision sensor mappings with statistical algorithms to deliver optimal recommendation advice.</p>
+          <p>By comparing live soil indicators with machine learning models trained on 2,200 standard crop records, farmers can maximize yields and use natural resources efficiently.</p>
+        `
+      }
+    };
+
+    function openDrawer(paramKey) {
+      const data = parameterData[paramKey];
+      if (!data) return;
+
+      document.getElementById('drawerTitle').innerText = data.title;
+      document.getElementById('drawerBadge').innerText = data.badge;
+      document.getElementById('drawerContent').innerHTML = data.content;
+
+      document.getElementById('infoDrawer').classList.add('open');
+    }
+
+    function closeDrawer() {
+      document.getElementById('infoDrawer').classList.remove('open');
+    }
+
+    // Close drawer when clicking outside it
+    document.addEventListener('click', function(event) {
+      const drawer = document.getElementById('infoDrawer');
+      const widgets = document.querySelector('.floating-widgets');
+      if (!drawer.contains(event.target) && !widgets.contains(event.target) && drawer.classList.contains('open')) {
+        closeDrawer();
+      }
+    });
+  </script>
+</body>
+</html>
